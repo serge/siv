@@ -107,8 +107,7 @@ html, body {
   background-origin: content-box;
   background-repeat: no-repeat;
   border: 2px solid darkblue;
-  margin: px4;
-  float: left;
+  text-align:center;
 }
 
 .bottom_panel {
@@ -117,7 +116,9 @@ html, body {
     border-radius: 10px;
     background-color: rgba(80, 80, 80, 0.5);
     overflow: hidden;
+    overflow-x: scroll;
     white-space: nowrap;
+    width:100%;
 }
 
 .selected {

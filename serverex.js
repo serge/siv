@@ -39,7 +39,7 @@ app.get('/', function(req, res) {
             "<div id='prev' ng-click='prev()'><div arrow-prev></div></div>" +
             "<div id='next' ng-click='next()'><div arrow-next></div></div>" +
             "</div>" +
-//            "<div class='bottom_panel' thumbs-gallery></div>" +
+            "<div class='bottom_panel' thumbs-gallery></div>" +
             "</body></html>";
     res.send(resp);
 });
@@ -61,13 +61,6 @@ function nav(inc) {
     }
     return resp;
 }
-app.get('/next', function(req, res) {
-    res.send(nav(true));
-});
-
-app.get('/prev', function(req, res) {
-    res.send(nav(false));
-});
 
 app.get('/images', function(req, res) {
         res.send({files:content.files});
