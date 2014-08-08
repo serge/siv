@@ -7,6 +7,9 @@ function Content(path, cache) {
     this.files = [];
     this.create_content();
     this.cache = cache;
+    if(!fs.existsSync(this.cache)) {
+        fs.mkdirSync(this.cache);
+    }
 }
 
 function chain(nfiles, path, cache) {
