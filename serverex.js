@@ -4,6 +4,7 @@ var fs = require('fs');
 var express = require('express');
 var _ = require('underscore');
 var cnt = require("./content");
+var mpath = require('path');
 
 var app = express();
 var id = 0;
@@ -25,23 +26,12 @@ app.use('/static', express.static(path));
 app.use('/static', express.static('js'));
 app.use('/static', express.static('css'));
 app.use('/thumbs', express.static(cache));
+app.engine('jade', require('jade').__express);
 
 app.get('/', function(req, res) {
-    res.set('Content-Type', 'text/html');
-    var resp = "<!DOCTYPE html><html><head><title>Serving images from \"" +
-            path + "\" folder</title>"  +
-            "<script src='//ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular.min.js'></script>" +
-            "<script src='/static/main.js'></script>" +
-            "<link rel='stylesheet' href='/static/main.css' />" +
-            " </head><body ng-app='main' ng-controller='ctr' >" +
-            "<div class='title'>{{title}}</div>" +
-            "<div class='image' style='background-image:{{url}}'>" +
-            "<div id='prev' ng-click='prev()'><div arrow-prev></div></div>" +
-            "<div id='next' ng-click='next()'><div arrow-next></div></div>" +
-            "</div>" +
-            "<div class='bottom_panel' thumbs-gallery></div>" +
-            "</body></html>";
-    res.send(resp);
+    var folder_name = mpath.basename(path);
+    var title = "Serving images from [" + folder_name + "]";
+    res.render('main.jade', {Title:title});
 });
 
 function nav(inc) {
