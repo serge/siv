@@ -1,15 +1,13 @@
 var fs = require('fs');
 var _ = require('underscore');
 var thumbs = require('./thumbs');
+var Q = require('q');
 
 function Content(path, cache) {
     this.path = path;
     this.files = [];
     this.create_content();
     this.cache = cache;
-    if(!fs.existsSync(this.cache)) {
-        fs.mkdirSync(this.cache);
-    }
 }
 
 function chain(nfiles, path, cache) {
@@ -29,11 +27,22 @@ function chain(nfiles, path, cache) {
 }
 
 Content.prototype.create_content = function () {
-    var that = this;
-    fs.readdir(this.path, function(err, nfiles) {
-        _.extend(that.files, nfiles);
-        var fn = chain(nfiles, that.path, that.cache);
-        fn(0);
+    var ctn = this;
+
+    function parse() {
+        fs.readdir(ctn.path, function(err, nfiles) {
+            _.extend(ctn.files, nfiles);
+            var fn = chain(nfiles, ctn.path, ctn.cache);
+            fn(0);
+        });
+    };
+
+    Q.nfcall(fs.exists, this.cache).then(function() {}, function(exists) {
+        if(exists)
+            parse();
+        Q.nfcall(fs.mkdir, ctn.cache).then(function () {
+            parse();
+        });
     });
 };
 
