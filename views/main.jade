@@ -13,4 +13,5 @@ html(lang="en")
         div(arrow-prev)
       #next(ng-click='next()')
         div(arrow-next)
-    .bottom_panel(thumbs-gallery)
+    .bottom_panel(thumbs-gallery, ng-show='apps.settings.gallery')
+    div.left_side(ng-click='apps.settings.gallery=!apps.settings.gallery;') Gallery {{apps.settings.gallery ? 'on': 'off'}}

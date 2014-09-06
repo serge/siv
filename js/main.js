@@ -21,7 +21,7 @@ angular.module('main', [])
     $scope.title = "oy!";
     $scope.url = '#';
     $scope.id = 0;
-
+    $scope.apps = {settings: {gallery:false}};
     function set_id(n) {
         console.log(n);
         if(!$scope.thumbs)

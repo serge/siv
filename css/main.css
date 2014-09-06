@@ -124,3 +124,13 @@ html, body {
 .selected {
     border: 2px solid darkred !important;
 }
+
+.left_side {
+    position:fixed;
+    left: 10px;
+    top: 100px;
+    background-color: gray;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px;
+}
