@@ -1,6 +1,6 @@
 var ee = require('easyimage');
 
-function convert(path, len, output, cb) {
+function convert(path, len, output) {
 
     function get_thumb(info) {
         var w = info.width, h = info.height;
@@ -12,15 +12,15 @@ function convert(path, len, output, cb) {
             nw = len * w / h;
             nh = len;
         }
-        ee.thumbnail({
+        return ee.thumbnail({
             src:path,
             dst:output,
             width:  nw,
             height: nh
-        }).then(cb);
+        });
     }
 
-    ee.info(path).then(get_thumb);
+    return ee.info(path).then(get_thumb);
 }
 
 exports.convert = convert;
