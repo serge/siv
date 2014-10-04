@@ -6,11 +6,13 @@ var _ = require('underscore');
 var cnt = require("./content");
 var mpath = require('path');
 var Q = require('q');
+var ei = require('easyimage');
 
 var app = express();
 var id = 0;
 var path = process.argv[2];
-var cache = 'cache';
+var cache_path = 'cache';
+var image_info = {};
 
 function main(exists) {
 
@@ -19,16 +21,16 @@ function main(exists) {
         process.exit(-1);
     }
 
-    var port = 3000;
+    var port = process.env.PORT;
 
     console.log("Serving ruller [" + path + "]");
 
-    var content = new cnt.Content(path, cache);
+    var content = new cnt.Content(path, cache_path);
 
     app.use('/static', express.static(path));
     app.use('/static', express.static('js'));
     app.use('/static', express.static('css'));
-    app.use('/thumbs', express.static(cache));
+    app.use('/thumbs', express.static(cache_path));
     app.engine('jade', require('jade').__express);
 
     app.get('/', function(req, res) {
@@ -37,26 +39,31 @@ function main(exists) {
         res.render('main.jade', {Title:title});
     });
 
-    function nav(inc) {
-        var resp = {};
-        if(inc)
-            id++;
-        else {
-            id = content.files.length - 1;
-            id %= content.files.length;
-        }
-        if(!_.isEmpty(content.files)) {
-            var filepath = content.files[id % content.files.length];
-            resp = {
-                title: filepath.split('.')[0],
-                path: filepath
-            };
-        }
-        return resp;
-    }
-
     app.get('/images', function(req, res) {
         res.send({files:content.files});
+    });
+
+    app.get('/image/:id', function(req, res) {
+        var id = parseInt(req.params.id);
+        var image_file = content.files[id];
+        var respond = function(info) {
+            var data = {
+                id: id,
+                url:image_file,
+                width: info.width,
+                height: info.height
+            };
+            image_info[image_file] = data;
+            res.send(data);
+        };
+        if(_.has(image_info, image_file)){
+            respond(image_info[image_file]);
+        } else
+            ei.info(path + '/' + image_file).then(respond, function(err) {
+                console.dir(err);
+                console.log('responding with default size');
+                respond({width:100, height:100});
+            });
     });
 
     app.listen(port);

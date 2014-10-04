@@ -19,8 +19,10 @@ function chain(nfiles, path, cache) {
             console.log(thumbPath);
             if(!fs.existsSync(thumbPath)) {
                 thumbs.convert(path + '/' + filename, 128, thumbPath)
-                    .then(fn,
-                          function(v) { console.dir(v);});
+                .then(fn, function(v) {
+                    console.dir(v);
+                    fn(0);
+                });
                 break;
             }
         };

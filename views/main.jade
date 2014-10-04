@@ -3,15 +3,19 @@ html(lang="en")
   head
     title #{Title}
     script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular.min.js')
+    script(src='//jashkenas.github.io/underscore/underscore-min.js')
     script(src='/static/main.js')
     link(rel='stylesheet', href='/static/main.css')
   body(ng-app='main' ng-controller='ctr')
     div.title.
       {{title}}
-    .image(style='background-image:{{url}}')
+    .image(ng-style='frame')
+      div(ng-style='style')
       #prev(ng-click='prev()')
         div(arrow-prev)
       #next(ng-click='next()')
         div(arrow-next)
     .bottom_panel(thumbs-gallery, ng-show='apps.settings.gallery')
-    div.left_side(ng-click='apps.settings.gallery=!apps.settings.gallery;') Gallery {{apps.settings.gallery ? 'on': 'off'}}
+    div.left_side
+      div(ng-click='apps.settings.gallery=!apps.settings.gallery;') Gallery {{apps.settings.gallery ? 'on': 'off'}}
+      div(file-types)

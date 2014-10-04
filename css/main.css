@@ -1,6 +1,4 @@
 html, body {
-    width:100%;
-    height:100%;
     text-align: center;
 }
 
@@ -9,18 +7,20 @@ html, body {
     background-size: contain;
     background-origin: content-box;
     background-repeat: no-repeat;
-    width:80%;
-    height:80%;
     display:inline-block;
     border: 5px solid gray;
     border-radius: 10px;
-    position:relative;
+    position:absolute;
 }
 
 .title {
     text-align: center;
-    border: 2px solid gray;
+    border: 2px solid #048;
     border-radius: 10px;
+    display:inline-block;
+    background-color: #404040;
+    padding: 10px 5px;
+    color: #cc8;
 }
 
 #prev,
@@ -28,7 +28,7 @@ html, body {
     position:absolute;
     top:0px;
     bottom:0px;
-    width:10%;
+    width:100px;
 }
 
 #next {
@@ -47,6 +47,14 @@ html, body {
 #next:hover .arrow_next,
 #prev:hover .arrow_prev {
     display:inline-block;
+}
+
+.arrow_next {
+    right: 15px;
+}
+
+.arrow_prev {
+    left: 15px;
 }
 
 .arrow_next .outer {
@@ -123,6 +131,7 @@ html, body {
 
 .selected {
     border: 2px solid darkred !important;
+    border-radius: 4px;
 }
 
 .left_side {
@@ -134,3 +143,10 @@ html, body {
     border-radius: 5px;
     padding: 5px;
 }
+
+.file_types {
+    position:fixed;
+    left:0px;
+    top:150px;
+
+};

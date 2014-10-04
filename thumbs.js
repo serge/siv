@@ -17,6 +17,9 @@ function convert(path, len, output) {
             dst:output,
             width:  nw,
             height: nh
+        }).then(function(v) {
+            info.filepath = path;
+            return info;
         });
     }
 
