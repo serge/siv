@@ -7,6 +7,9 @@ html, body {
     background-size: contain;
     background-origin: content-box;
     background-repeat: no-repeat;
+}
+
+.frame {
     display:inline-block;
     border: 5px solid gray;
     border-radius: 10px;

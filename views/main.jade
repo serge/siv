@@ -9,8 +9,8 @@ html(lang="en")
   body(ng-app='main' ng-controller='ctr')
     div.title.
       {{title}}
-    .image(ng-style='frame')
-      div(ng-style='style')
+    .frame(ng-style='frame')
+      .image(ng-style='style')
       #prev(ng-click='prev()')
         div(arrow-prev)
       #next(ng-click='next()')
