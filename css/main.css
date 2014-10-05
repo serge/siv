@@ -113,12 +113,18 @@ html, body {
   display:inline-block;
   width: 128px;
   height: 128px;
-  background-position: center center;
-  background-size: contain;
-  background-origin: content-box;
-  background-repeat: no-repeat;
-  border: 2px solid darkblue;
+  border: 5px solid #448;
+  border-radius: 4px;
+  margin: 4px;
   text-align:center;
+}
+
+.button {
+    border-radius: 8px;
+    border: 2px solid #04c;
+    background-color: #26e;
+    color: #ccc;
+    padding: 5px;
 }
 
 .bottom_panel {
@@ -133,8 +139,9 @@ html, body {
 }
 
 .selected {
-    border: 2px solid darkred !important;
+    border: 5px solid darkred !important;
     border-radius: 4px;
+    background-color: darkred;
 }
 
 .left_side {
@@ -145,6 +152,10 @@ html, body {
     border: 1px solid black;
     border-radius: 5px;
     padding: 5px;
+}
+
+.left_side div {
+    margin: 3px;
 }
 
 .file_types {

@@ -20,7 +20,13 @@ angular.module('main', [])
 .controller('ctr', function($scope, $http, $window) {
     $scope.url = '#';
     $scope.id = 0;
-    $scope.apps = {settings: {gallery:false}};
+    $scope.deleted = [];
+
+    $http.get('/deleted').success(function(resp) {
+        $scope.deleted = resp;
+    });
+
+    $scope.apps = {settings: {gallery:false, deleted_gallery:false}};
     function fit_into(obj, W, H) {
         var w = obj.width, h = obj.height,
             rw = W / w,
@@ -93,6 +99,7 @@ angular.module('main', [])
     $scope.delete_img = function() {
         var n = $scope.id;
         $http.get('/delete/' + get_current().id).success(function(resp) {
+            $scope.deleted.push(get_current());
             init($scope.sel_type);
         });
     };
@@ -114,15 +121,46 @@ angular.module('main', [])
         });
     }
 
+    function undelete(id) {
+        $http.get('/undelete/' + $scope.deleted[id].url)
+            .success(function(resp) {
+                console.log(resp);
+            });
+    };
+
+    $scope.gallery_event = 'gallery_id';
+    $scope.deleted_gallery_event = 'deleted_gallery_id';
+
+    $scope.$on($scope.gallery_event, function(event, arg) {
+        set_id(arg.id);
+    });
+
+    $scope.$on($scope.deleted_gallery_event, function(event, arg) {
+        console.log(arg);
+        undelete(arg.id);
+    });
+
     init();
 }).directive('thumbsGallery', function () {
     return {
-        restrict: 'A',
-        template: '<div class="thumbnail" ng-repeat="t in thumbs" ' +
+        restrict: 'E',
+        scope: {
+            thumbs: '=',
+            id: '=ngModel',
+            event:'='
+        },
+        template: '<div class="bottom_panel"> <div class="thumbnail image" ng-repeat="t in thumbs" ' +
             'style=\'background-image:url({{"/thumbs/" + t.url}})\'' +
             'ng-click="set_id($index)"' +
             'ng-class="{selected: is_selected($index)}"' +
-            '></div>'
+            '></div></div>',
+        link: function(scope, element, attr) {
+            scope.is_selected = function(n) {return scope.id == n;};
+            scope.set_id = function(n) {
+                scope.id = n;
+                scope.$emit(scope.event, {id: n});
+            };
+        }
     };
 }).directive('fileTypes', function () {
     return {

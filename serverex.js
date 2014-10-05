@@ -86,6 +86,25 @@ function main(exists) {
             }
         });
     });
+
+    app.get('/deleted', function(req, res) {
+        fs.readdir(deleted_path, function(err, nfiles) {
+            res.send(_.map(nfiles, function(nfile) { return {url:nfile};}));
+        });
+    });
+
+    app.get('/undelete/:id', function(req, res) {
+        var image_file = req.params.id;
+        fs.rename(deleted_path + image_file, get_fullpath(image_file), function(err, ok) {
+            if(err) {
+                res.send(err);
+            } else {
+                delete content.files[id];
+                res.send({deleted:true, id:id});
+            }
+        });
+    });
+
     app.listen(port);
     console.log('Open your browser at http://localhost:' + port + ' ...');
 
