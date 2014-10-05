@@ -21,9 +21,17 @@ function main(exists) {
         process.exit(-1);
     }
 
+    var deleted_path = path + '/.deleted/';
+    if(!fs.existsSync(deleted_path))
+        fs.mkdirSync(deleted_path);
+
     var port = process.env.PORT;
 
     console.log("Serving ruller [" + path + "]");
+
+    function get_fullpath(fname) {
+        return path + '/' + fname;
+    }
 
     var content = new cnt.Content(path, cache_path);
 
@@ -44,8 +52,8 @@ function main(exists) {
     });
 
     app.get('/image/:id', function(req, res) {
-        var id = parseInt(req.params.id);
-        var image_file = content.files[id];
+        var id = req.params.id;
+        var image_file = content.files[id].url;
         var respond = function(info) {
             var data = {
                 id: id,
@@ -59,13 +67,25 @@ function main(exists) {
         if(_.has(image_info, image_file)){
             respond(image_info[image_file]);
         } else
-            ei.info(path + '/' + image_file).then(respond, function(err) {
+            ei.info(get_fullpath(image_file)).then(respond, function(err) {
                 console.dir(err);
                 console.log('responding with default size');
                 respond({width:100, height:100});
             });
     });
 
+    app.get('/delete/:id', function(req, res) {
+        var id = req.params.id;
+        var image_file = content.files[id].url;
+        fs.rename(get_fullpath(image_file), deleted_path + image_file, function(err, ok) {
+            if(err) {
+                res.send(err);
+            } else {
+                delete content.files[id];
+                res.send({deleted:true, id:id});
+            }
+        });
+    });
     app.listen(port);
     console.log('Open your browser at http://localhost:' + port + ' ...');
 

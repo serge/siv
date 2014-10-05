@@ -16,7 +16,6 @@ function chain(nfiles, path, cache) {
         while(n<nfiles.length) {
             var filename = nfiles[n++];
             var thumbPath = cache + '/' + filename;
-            console.log(thumbPath);
             if(!fs.existsSync(thumbPath)) {
                 thumbs.convert(path + '/' + filename, 128, thumbPath)
                 .then(fn, function(v) {
@@ -35,7 +34,14 @@ Content.prototype.create_content = function () {
 
     function parse() {
         fs.readdir(ctn.path, function(err, nfiles) {
-            _.extend(ctn.files, nfiles);
+            nfiles = _.filter(nfiles, function(v) {
+                return fs.statSync(ctn.path + '/' + v).isFile();
+            });
+            ctn.files = _.object(_.range(nfiles.length),
+                                 _.map(nfiles,
+                                       function (url, i) {
+                                           return {id:i, url:url};
+                                       }));
             var fn = chain(nfiles, ctn.path, ctn.cache);
             fn(0);
         });

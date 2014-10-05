@@ -49,7 +49,7 @@ angular.module('main', [])
         return style;
     }
     function set_id(n) {
-        n = n % $scope.thumbs.length;
+        n = parseInt(n) % _.size($scope.thumbs);
         var id = $scope.thumbs[n].id;
         $http.get('/image/' + id).success(function(resp) {
             $scope.id = n;
@@ -90,22 +90,31 @@ angular.module('main', [])
         $scope.sel_type = item;
     };
 
+    $scope.delete_img = function() {
+        var n = $scope.id;
+        $http.get('/delete/' + get_current().id).success(function(resp) {
+            init($scope.sel_type);
+        });
+    };
+
     $scope.selected_type = function(item) {
         return $scope.sel_type === item;
     };
 
-    $http.get('/images').success(function (resp) {
-        var indexed = $scope.files = _.map(resp.files, function(v, i) {
-            return {url: v, id:i};
+    function init(selected_type) {
+        $http.get('/images').success(function (resp) {
+            var indexed = $scope.files = _.toArray(resp.files);
+
+            $scope.types = _.uniq(_.map(resp.files, function(v) {
+                return _.last(v.url.split('.'));
+            }));
+
+            $scope.types.push('all');
+            $scope.filter(selected_type || 'all');
         });
-        $scope.types = _.uniq(_.map(resp.files, function(v) {
-            return _.last(v.split('.'));
-        }));
-        $scope.types.push('all');
-        $scope.filter('all');
-    });
+    }
 
-
+    init();
 }).directive('thumbsGallery', function () {
     return {
         restrict: 'A',
