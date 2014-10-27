@@ -1,0 +1,26 @@
+{
+  "name": "siv",
+  "version": "0.0.2",
+  "homepage": "https://github.com/serge/siv",
+  "authors": [
+    "Sergey Redko <sergredko@gmail.com>"
+  ],
+  "description": "Simple image viewer",
+  "keywords": [
+    "node",
+    "angular"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-route": "~1.3.0",
+    "underscore": "~1.7.0"
+  }
+}

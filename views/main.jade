@@ -2,8 +2,8 @@ doctype html
 html(lang="en")
   head
     title #{Title}
-    script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular.min.js')
-    script(src='//jashkenas.github.io/underscore/underscore-min.js')
+    script(src='/extern/angular/angular.min.js')
+    script(src='/extern/underscore/underscore-min.js')
     script(src='/static/main.js')
     link(rel='stylesheet', href='/static/main.css')
   body(ng-app='main' ng-controller='ctr')
@@ -12,9 +12,9 @@ html(lang="en")
     .frame(ng-style='frame')
       .image(ng-style='style')
       #prev(ng-click='prev()')
-        div(arrow-prev)
+        div(nav-arrow, next='false')
       #next(ng-click='next()')
-        div(arrow-next)
+        div(nav-arrow, next='true')
     thumbs-gallery(thumbs='deleted', event='deleted_gallery_event', ng-show='apps.settings.deleted_gallery')
     thumbs-gallery(thumbs='thumbs', ng-model='id', event='gallery_event' ng-show='apps.settings.gallery')
     div.left_side

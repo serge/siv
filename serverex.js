@@ -38,8 +38,14 @@ function main(exists) {
     app.use('/static', express.static(path));
     app.use('/static', express.static('js'));
     app.use('/static', express.static('css'));
+    app.use('/extern', express.static('bower_components'));
     app.use('/thumbs', express.static(cache_path));
     app.engine('jade', require('jade').__express);
+
+    app.get('/partials/:name', function (req, res) {
+        var name = req.params.name;
+        res.render('partials/' + name + '.jade');
+    });
 
     app.get('/', function(req, res) {
         var folder_name = mpath.basename(path);

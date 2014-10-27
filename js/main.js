@@ -1,20 +1,12 @@
 angular.module('main', [])
-.directive('arrowPrev', function() {
+.directive('navArrow', function() {
     "use strict";
     return {
-        template:"<div class='arrow_prev' >" +
-            "<div class='outer'></div>" +
-            "<div class='inner'></div>" +
-            "</div>"
-    };
-})
-.directive('arrowNext', function() {
-    "use strict";
-    return {
-        template:"<div class='arrow_next' >" +
-            "<div class='outer'></div>" +
-            "<div class='inner'></div>" +
-            "</div>"
+        templateUrl: "partials/arrow_next",
+        restrict: 'A',
+        scope: {
+            next: '='
+        }
     };
 })
 .controller('ctr', function($scope, $http, $window) {
@@ -149,11 +141,7 @@ angular.module('main', [])
             id: '=ngModel',
             event:'='
         },
-        template: '<div class="bottom_panel"> <div class="thumbnail image" ng-repeat="t in thumbs" ' +
-            'style=\'background-image:url({{"/thumbs/" + t.url}})\'' +
-            'ng-click="set_id($index)"' +
-            'ng-class="{selected: is_selected($index)}"' +
-            '></div></div>',
+        templateUrl: 'partials/gallery',
         link: function(scope, element, attr) {
             scope.is_selected = function(n) {return scope.id == n;};
             scope.set_id = function(n) {
@@ -165,9 +153,6 @@ angular.module('main', [])
 }).directive('fileTypes', function () {
     return {
         restrict: 'A',
-        template: '<div ng-repeat="t in types" ' +
-            'ng-click="filter(t)"' +
-            'ng-class="{selected: selected_type(t)}"' +
-            '>{{t}}</div>'
+        templateUrl: 'partials/file_types'
     };
 });
