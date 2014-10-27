@@ -1,0 +1,3 @@
+div(ng-repeat="t in types",
+    ng-click="filter(t)",
+    ng-class="{selected: selected_type(t)}"){{t}}

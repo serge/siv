@@ -1,0 +1,5 @@
+div(class="bottom_panel")
+  div(class="thumbnail image", ng-repeat="t in thumbs",
+      style="background-image:url({{'/thumbs/' + t.url}})",
+      ng-click="set_id($index)",
+      ng-class="{selected: is_selected($index)}")
