@@ -50,7 +50,7 @@ function main(exists) {
     app.get('/', function(req, res) {
         var folder_name = mpath.basename(path);
         var title = "Serving images from [" + folder_name + "]";
-        res.render('main.jade', {Title:title});
+        res.render('index.jade', {Title:title});
     });
 
     app.get('/images', function(req, res) {

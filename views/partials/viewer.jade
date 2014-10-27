@@ -1,0 +1,19 @@
+div.title.
+  {{title}}
+.frame(ng-style='frame')
+  .image(ng-style='style')
+  #prev(ng-click='prev()')
+    div(nav-arrow, next='false')
+  #next(ng-click='next()')
+    div(nav-arrow, next='true')
+thumbs-gallery(thumbs='deleted', event='deleted_gallery_event', ng-show='apps.settings.deleted_gallery')
+thumbs-gallery(thumbs='thumbs', ng-model='id', event='gallery_event' ng-show='apps.settings.gallery')
+div.left_side
+  div.button(ng-click='apps.settings.gallery=!apps.settings.gallery;') Gallery {{apps.settings.gallery ? 'on': 'off'}}
+  div.button(ng-click='delete_img()') Delete
+  div.button(ng-click='apps.settings.deleted_gallery=!apps.settings.deleted_gallery;') Undelete
+  div(ng-style='{border:"2px solid #aaa"}')
+    div
+      b
+        u Filters
+    div(file-types)

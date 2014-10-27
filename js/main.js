@@ -1,4 +1,22 @@
-angular.module('main', [])
+angular.module('main', ['ngRoute'])
+.config(['$routeProvider', function($routeProvider) {
+    $routeProvider.
+        when('/', {
+            templateUrl: 'partials/main',
+            controller: 'mainCtr'
+        }).
+        when('/:imageId', {
+            templateUrl: 'partials/viewer',
+            controller: 'viewerCtr'
+        }).
+        when('/about', {
+            templateUrl: 'partials/about',
+            controller: 'aboutCtr'
+        }).
+        otherwise({
+            redirectTo: '/'
+        });
+}])
 .directive('navArrow', function() {
     "use strict";
     return {
@@ -9,15 +27,54 @@ angular.module('main', [])
         }
     };
 })
-.controller('ctr', function($scope, $http, $window) {
-    $scope.url = '#';
-    $scope.id = 0;
-    $scope.deleted = [];
+.controller('aboutCtr', function($scope) {
+    $scope.app = "Simple image viewer";
+}).factory('images', function($http, $rootScope) {
+    return {
+        files: [],
+        types: [],
+        sel_type: undefined,
+        thumbs: [],
+        init:function(selected_type) {
+            var that = this;
+            $http.get('/images').success(function (resp) {
+                var indexed = that.files = _.toArray(resp.files);
 
+                that.types = _.uniq(_.map(resp.files, function(v) {
+                    return _.last(v.url.split('.'));
+                }));
+
+                that.types.push('all');
+                that.filter(selected_type || 'all');
+                $rootScope.$broadcast('images');
+            });
+        },
+        filter: function(item) {
+            this.thumbs = this.files;
+            if(item !== 'all')
+                this.thumbs = _.filter(this.files, function(v) { return _.last(v.url.split('.')) === item;});
+            this.sel_type = item;
+        }
+    };
+})
+.controller('mainCtr', function($scope, $http, $window, $location, images) {
+
+    images.init();
     $http.get('/deleted').success(function(resp) {
         $scope.deleted = resp;
     });
 
+    $scope.$on('images', function(event, data) {
+        $location.url('/0');
+    });
+
+})
+.controller('viewerCtr', function($scope, $http, $window, $location, $routeParams, images) {
+    $scope.url = '#';
+    $scope.id = $routeParams.imageId || 0;
+    $scope.deleted = [];
+
+    console.log('enter controller');
     $scope.apps = {settings: {gallery:false, deleted_gallery:false}};
     function fit_into(obj, W, H) {
         var w = obj.width, h = obj.height,
@@ -47,8 +104,8 @@ angular.module('main', [])
         return style;
     }
     function set_id(n) {
-        n = parseInt(n) % _.size($scope.thumbs);
-        var id = $scope.thumbs[n].id;
+        n = parseInt(n) % _.size(images.thumbs);
+        var id = images.thumbs[n].id;
         $http.get('/image/' + id).success(function(resp) {
             $scope.id = n;
             $scope.url = 'url("/static/' + resp.url + '")';
@@ -67,26 +124,19 @@ angular.module('main', [])
     $scope.set_id = set_id;
 
     function get_current() {
-        return $scope.thumbs[$scope.id];
+        return images.thumbs[$scope.id];
     }
 
     $scope.next = function() {
-        set_id($scope.id + 1);
+            $location.url('/' + ($scope.id + 1));
+//        set_id($scope.id + 1);
     };
 
     $scope.prev = function() {
-        set_id($scope.id + $scope.thumbs.length - 1);
+        set_id($scope.id + images.thumbs.length - 1);
     };
 
     $scope.is_selected = function(n) {return $scope.id == n;};
-
-    $scope.filter = function(item) {
-        $scope.thumbs = $scope.files;
-        if(item !== 'all')
-            $scope.thumbs = _.filter($scope.files, function(v) { return _.last(v.url.split('.')) === item;});
-        $scope.set_id($scope.id);
-        $scope.sel_type = item;
-    };
 
     $scope.delete_img = function() {
         var n = $scope.id;
@@ -99,19 +149,6 @@ angular.module('main', [])
     $scope.selected_type = function(item) {
         return $scope.sel_type === item;
     };
-
-    function init(selected_type) {
-        $http.get('/images').success(function (resp) {
-            var indexed = $scope.files = _.toArray(resp.files);
-
-            $scope.types = _.uniq(_.map(resp.files, function(v) {
-                return _.last(v.url.split('.'));
-            }));
-
-            $scope.types.push('all');
-            $scope.filter(selected_type || 'all');
-        });
-    }
 
     function undelete(id) {
         $http.get('/undelete/' + $scope.deleted[id].url)
@@ -132,7 +169,7 @@ angular.module('main', [])
         undelete(arg.id);
     });
 
-    init();
+    set_id($routeParams.imageId);
 }).directive('thumbsGallery', function () {
     return {
         restrict: 'E',
