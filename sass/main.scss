@@ -1,3 +1,8 @@
+$thumbnail_width: 128px;
+$thumbnail_height: 128px;
+$arrow_width: 5px;
+$arrow_color: green;
+
 html, body {
     text-align: center;
 }
@@ -50,6 +55,7 @@ html, body {
 #next:hover .arrow_next,
 #prev:hover .arrow_prev {
     display:inline-block;
+    position:relative;
 }
 
 .arrow_next {
@@ -60,31 +66,57 @@ html, body {
     left: 15px;
 }
 
-.arrow_next .outer {
-  border-left:16px solid black;
-  border-top: 16px solid transparent;
-  border-right:16px solid transparent;
-  border-bottom: 16px solid transparent;
-  display:inline-block;
+@mixin arrow($len, $left, $top, $right, $bottom)
+{
+  border-left:$len solid $left;
+  border-top: $len solid $top;
+  border-right:$len solid $right;
+  border-bottom: $len solid $bottom;
+}
 
+@mixin left-arrow($len, $color) {
+    @include arrow($len, $color, transparent, transparent, transparent);
+}
+
+@mixin right-arrow($len, $color) {
+    @include arrow($len, transparent, transparent, $color, transparent);
+}
+
+.topleft {
+    @include arrow($arrow_width, $arrow_color, $arrow_color, transparent, transparent);
+}
+
+.topright {
+    @include arrow($arrow_width, transparent, $arrow_color, $arrow_color, transparent);
+}
+
+.bottomleft {
+    @include arrow($arrow_width, $arrow_color, transparent, transparent, $arrow_color);
+}
+
+.bottomright {
+    @include arrow($arrow_width, transparent, transparent, $arrow_color, $arrow_color);
+}
+
+.triangle {
+    position: absolute;
+    display:inline-block;
+    background-color:transparent;
+}
+
+.arrow_next .outer {
+    @include left-arrow(16px, #84b);
+    display:inline-block;
 }
 
 .arrow_prev .outer {
-
-  border-left:16px solid transparent;
-  border-top: 16px solid transparent;
-  border-right:16px solid black;
-  border-bottom: 16px solid transparent;
-  display:inline-block;
-
+    @include right-arrow(16px, #84b);
+    display:inline-block;
 }
 
 .arrow_next .inner {
 
-  border-left:10px solid white;
-  border-top: 10px solid transparent;
-  border-right:10px solid transparent;
-  border-bottom: 10px solid transparent;
+  @include left-arrow(10px, white);
   display:inline-block;
   position:absolute;
   top:6px;
@@ -95,24 +127,21 @@ html, body {
   position:absolute;
   top:6px;
   left:12px;
-  border-left:10px solid transparent;
-  border-top: 10px solid transparent;
-  border-right:10px solid white;
-  border-bottom:10px solid transparent;
+  @include right-arrow(10px, white);
   display:inline-block;
 
 }
 
 .arrow_next, .arrow_prev{
-  position:absolute;
+  position:relative;
   display:none;
   top:50%;
 }
 
 .thumbnail {
   display:inline-block;
-  width: 128px;
-  height: 128px;
+  width: $thumbnail_width;
+  height: $thumbnail_height;
   border: 5px solid #448;
   border-radius: 4px;
   margin: 4px;
@@ -121,8 +150,8 @@ html, body {
 
 .button {
     border-radius: 8px;
-    border: 2px solid #04c;
-    background-color: #26e;
+    border: 2px solid #08b;
+    background-color: #48b;
     color: #ccc;
     padding: 5px;
 }

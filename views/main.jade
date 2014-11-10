@@ -11,10 +11,8 @@ html(lang="en")
       {{title}}
     .frame(ng-style='frame')
       .image(ng-style='style')
-      #prev(ng-click='prev()')
-        div(nav-arrow, next='false')
-      #next(ng-click='next()')
-        div(nav-arrow, next='true')
+      #prev(ng-click='prev()', nav-arrow, next='false')
+      #next(ng-click='next()', nav-arrow, next='true')
     thumbs-gallery(thumbs='deleted', event='deleted_gallery_event', ng-show='apps.settings.deleted_gallery')
     thumbs-gallery(thumbs='thumbs', ng-model='id', event='gallery_event' ng-show='apps.settings.gallery')
     div.left_side

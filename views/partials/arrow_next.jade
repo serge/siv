@@ -1,3 +1,9 @@
-div(ng-class='{arrow_next:next,arrow_prev:!next}')
-  div(class='outer')
-  div(class='inner')
+div(ng-style='{height:"100%"}')
+  div(ng-class='{arrow_next:next,arrow_prev:!next}')
+    div.triangle(ng-repeat='n in path_top', ng-style='{top:"" + (n.y * width) + "px", left:"" + (n.x * width) + "px"}')
+      div.triangle.topright(ng-style='{top:"0px", left:"0px"}')
+      div.triangle.bottomleft(ng-style='{top:"0px", left:"" + width + "px"}')
+
+    div.triangle(ng-repeat='n in path_bottom', ng-style='{top:"" + (n.y * width) + "px", left:"" + (n.x * width) + "px"}')
+      div.triangle.bottomright(ng-style='{top:"0px",left:"0px"}')
+      div.triangle.topleft(ng-style='{top:"0px",left:"" + width + "px"}')

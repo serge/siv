@@ -1,14 +1,4 @@
-angular.module('main', [])
-.directive('navArrow', function() {
-    "use strict";
-    return {
-        templateUrl: "partials/arrow_next",
-        restrict: 'A',
-        scope: {
-            next: '='
-        }
-    };
-})
+angular.module('main', ['directives'])
 .controller('ctr', function($scope, $http, $window) {
     $scope.url = '#';
     $scope.id = 0;
@@ -133,26 +123,4 @@ angular.module('main', [])
     });
 
     init();
-}).directive('thumbsGallery', function () {
-    return {
-        restrict: 'E',
-        scope: {
-            thumbs: '=',
-            id: '=ngModel',
-            event:'='
-        },
-        templateUrl: 'partials/gallery',
-        link: function(scope, element, attr) {
-            scope.is_selected = function(n) {return scope.id == n;};
-            scope.set_id = function(n) {
-                scope.id = n;
-                scope.$emit(scope.event, {id: n});
-            };
-        }
-    };
-}).directive('fileTypes', function () {
-    return {
-        restrict: 'A',
-        templateUrl: 'partials/file_types'
-    };
 });
